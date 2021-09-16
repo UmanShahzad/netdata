@@ -112,11 +112,10 @@ static void oomkill_write_data()
         }
     }
 
-    // for any remaining keys for which we couldn't find a group, this could be
-    // for various reasons, but the primary one is that the PID has not yet
-    // been picked up by the process thread when parsing the proc filesystem.
-    // since it's been OOM killed, it will never be parsed in the future, so
-    // we have no choice but to dump it into `other`.
+    // if there are any remaining keys for which we couldn't find a group, it
+    // means that these PIDs were created & OOM killed faster than we could
+    // parse them from the proc filesystem. so dump them into the short-lived
+    // group.
     uint32_t j;
     uint32_t rem_count = 0;
     for (j = 0; j < i; j++) {
@@ -126,7 +125,7 @@ static void oomkill_write_data()
         }
     }
     if (rem_count > 0) {
-        write_chart_dimension("other", rem_count);
+        write_chart_dimension(APPS_TARGET_SHORTLIVED, rem_count);
     }
 }
 

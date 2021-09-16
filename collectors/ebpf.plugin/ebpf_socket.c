@@ -169,7 +169,7 @@ static inline void calculate_nv_plot()
     }
     inbound_vectors.max_plot = end;
 
-    // The 'Other' dimension is always calculated for the chart to have at least one dimension
+    // The default dimension is always calculated for the chart to have at least one dimension
     update_nv_plot_data(&inbound_vectors.plot[inbound_vectors.last].plot,
                         &inbound_vectors.plot[inbound_vectors.last].sock);
 
@@ -179,7 +179,7 @@ static inline void calculate_nv_plot()
     }
     outbound_vectors.max_plot = end;
 
-    // The 'Other' dimension is always calculated for the chart to have at least one dimension
+    // The default dimension is always calculated for the chart to have at least one dimension
     update_nv_plot_data(&outbound_vectors.plot[outbound_vectors.last].plot,
                         &outbound_vectors.plot[outbound_vectors.last].sock);
 }
@@ -1143,10 +1143,10 @@ int fill_names(netdata_socket_plot_t *ptr, int is_outbound)
 static void fill_last_nv_dimension(netdata_socket_plot_t *ptr, int is_outbound)
 {
     char hostname[NI_MAXHOST], service_name[NI_MAXSERV];
-    char *other = { "other" };
+    char *def = { APPS_TARGET_DEFAULT };
     // We are also copying the NULL bytes to avoid warnings in new compilers
-    strncpy(hostname, other, 6);
-    strncpy(service_name, other, 6);
+    strncpy(hostname, def, 6);
+    strncpy(service_name, def, 6);
 
     ptr->family = AF_INET;
     ptr->sock.protocol = 255;

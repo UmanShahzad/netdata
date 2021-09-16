@@ -327,7 +327,15 @@ int ebpf_read_apps_groups_conf(struct target **agdt, struct target **agrt, const
 
     procfile_close(ff);
 
-    *agdt = get_apps_groups_target(agrt, "p+!o@w#e$i^r&7*5(-i)l-o_", NULL, "other"); // match nothing
+    // special group for short-lived PIDs that we may not detect during procfs
+    // parsing.
+    struct target *shortlived = get_apps_groups_target(agrt, "_o-l)i-(5*7&r^i$e#w@o!+p", NULL, APPS_TARGET_SHORTLIVED);
+    if (shortlived == NULL) {
+        fatal("Cannot create short-lived PID target");
+    }
+
+    // group for no matches.
+    *agdt = get_apps_groups_target(agrt, "p+!o@w#e$i^r&7*5(-i)l-o_", NULL, APPS_TARGET_DEFAULT);
     if (!*agdt)
         fatal("Cannot create default target");
 

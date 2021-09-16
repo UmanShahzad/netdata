@@ -8,6 +8,9 @@
 
 #include "libnetdata/libnetdata.h"
 
+#define APPS_TARGET_DEFAULT "other"
+#define APPS_TARGET_SHORTLIVED "short-lived"
+
 // ----------------------------------------------------------------------------
 
 // callback required by fatal()
@@ -942,8 +945,16 @@ static int read_apps_groups_conf(const char *path, const char *file)
 
     procfile_close(ff);
 
-    apps_groups_default_target = get_apps_groups_target("p+!o@w#e$i^r&7*5(-i)l-o_", NULL, "other"); // match nothing
-    if(!apps_groups_default_target)
+    // special group for short-lived PIDs that we may not detect during procfs
+    // parsing.
+    struct target *shortlived = get_apps_groups_target("_o-l)i-(5*7&r^i$e#w@o!+p", NULL, APPS_TARGET_SHORTLIVED);
+    if (shortlived == NULL) {
+        fatal("Cannot create short-lived PID target");
+    }
+
+    // group for no matches.
+    apps_groups_default_target = get_apps_groups_target("p+!o@w#e$i^r&7*5(-i)l-o_", NULL, APPS_TARGET_DEFAULT);
+    if (!apps_groups_default_target)
         fatal("Cannot create default target");
 
     // allow the user to override group 'other'

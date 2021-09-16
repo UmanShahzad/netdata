@@ -30,6 +30,9 @@
 #include "ebpf_swap.h"
 #include "ebpf_vfs.h"
 
+#define APPS_TARGET_DEFAULT "other"
+#define APPS_TARGET_SHORTLIVED "short-lived"
+
 #define MAX_COMPARE_NAME 100
 #define MAX_NAME 100
 
